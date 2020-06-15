@@ -85,37 +85,39 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
     
 #----
-    - name: Get versions in prod / staging
-      uses: azure/CLI@v1
-      with:
-        inlineScript: |
-          staging=`az webapp config container show -n openhack7ni2orr9trips --slot staging -g openhack7ni2orr9rg | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-trips | awk '{print $2}'`
-          prod=`az webapp config container show -n openhack7ni2orr9trips -g openhack7ni2orr9rg | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-trips | awk '{print $2}'`
-          echo ::set-env name=staging-version::$staging
-          echo ::set-env name=prod-version::$prod
-    - name: Create Issue
-      uses: actions/github-script@0.9.0
-      with:
-        script: |
-          github.issues.create({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            title: 'Approve TRIPS Deploy to Production',
-            assignees: [ '${{ github.actor }}' ],
-            body: 'Please perform the following:<br><br>* navigate to [the API\'s swagger endpoint](https://openhack7ni2orr9acr-staging.azurewebsites.net/api/docs/trips/index.html)<br>* if everything looks good, comment `/approve` to deploy to production<br><br>Current version in prod: ${{ env.prod-version }}<br><br>Version in staging: ${{ env.staging-version }}'
-            })  
-        # TODO Check for approve action for above step (line 61) before running below swap action: 
   swap:
-          runs-on: ubuntu-latest
-          steps:
-            - name: 'Login via Azure CLI'
-              uses: azure/login@v1
-              with:
-                creds: ${{ secrets.AZURE_CREDENTIALS }}
-            - name: Run CLI script
-              uses: azure/CLI@v1
-              with:
-                inlineScript: |
+    needs : [test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get versions in prod / staging
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            staging=`az webapp config container show -n openhack7ni2orr9trips --slot staging -g openhack7ni2orr9rg | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-trips | awk '{print $2}'`
+            prod=`az webapp config container show -n openhack7ni2orr9trips -g openhack7ni2orr9rg | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-trips | awk '{print $2}'`
+            echo ::set-env name=staging-version::$staging
+            echo ::set-env name=prod-version::$prod
+      - name: Create Issue
+        uses: actions/github-script@0.9.0
+        with:
+          script: |
+            github.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Approve TRIPS Deploy to Production',
+              assignees: [ '${{ github.actor }}' ],
+              body: 'Please perform the following:<br><br>* navigate to [the API\'s swagger endpoint](https://openhack7ni2orr9acr-staging.azurewebsites.net/api/docs/trips/index.html)<br>* if everything looks good, comment `/approve` to deploy to production<br><br>Current version in prod: ${{ env.prod-version }}<br><br>Version in staging: ${{ env.staging-version }}'
+              })  
+          # TODO Check for approve action for above step (line 61) before running below swap action: 
+
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Run CLI script
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
                    az webapp deployment slot swap  -g openhack7ni2orr9rg -n openhack7ni2orr9trips --slot staging --target-slot production
-            - name: Azure Logout
-              run: az logout
+      - name: Azure Logout
+        run: az logout
