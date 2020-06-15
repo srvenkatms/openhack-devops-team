@@ -58,11 +58,11 @@ jobs:
         $R = Invoke-WebRequest -Method Get -URI 'https://openhackggp0ljh0trips-staging.azurewebsites.net/api/healthcheck/trips'
         $timestamp = Get-Date
         $output = ""
-        if ($displayUri) {
-          $output = $output = '{0} | {1} | {2}' -f($timestamp, $R.StatusCode, $Uri)
-          if($R.SatusCode -ne '200'){
+       
+        $output = '{0} | {1} | {2}' -f($timestamp, $R.StatusCode, $Uri)
+        if($R.SatusCode -ne '200'){
             exit 1
-          }
+        
         } else {
         $output = '{0} | {1}' -f($timestamp, $R.StatusCode)
         }
@@ -82,7 +82,7 @@ jobs:
         # Always delete the tag, even if a release is not associated with it.
         always_delete_tag: true
       env:
-        GITHUB_TOKEN: ${{ secrets.AZURE_CREDENTIALS}}
+        GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
     
 #----
     - name: Get versions in prod / staging
