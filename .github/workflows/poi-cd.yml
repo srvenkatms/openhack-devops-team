@@ -45,7 +45,7 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'openhack7ni2orr9poi'
-        images: openhack7ni2orr9acr.azurecr.io/devopsoh/api-poi:${{ github.run_number }}
+        images: openhack7ni2orr9acr.azurecr.io/devopsoh/api-poi:changeme
         slot-name: 'staging'
     - name: Get versions in prod / staging
       uses: azure/CLI@v1
