@@ -51,8 +51,8 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: |
-          staging=`az webapp config container show -n openhack7ni2orr9acr --slot staging -g openhack7ni2orr9acr | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-poi | awk '{print $2}'`
-          prod=`az webapp config container show -n openhack7ni2orr9acr -g openhack7ni2orr9acr | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-poi | awk '{print $2}'`
+          staging=`az webapp config container show -n openhack7ni2orr9poi --slot staging -g openhack7ni2orr9acr | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-poi | awk '{print $2}'`
+          prod=`az webapp config container show -n openhack7ni2orr9poi -g openhack7ni2orr9acr | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-poi | awk '{print $2}'`
           echo ::set-env name=staging-version::$staging
           echo ::set-env name=prod-version::$prod
     - name: Create Issue
@@ -66,6 +66,19 @@ jobs:
             assignees: [ '${{ github.actor }}' ],
             body: 'Please perform the following:<br><br>* navigate to [the API\'s swagger endpoint](https://openhack7ni2orr9acr-staging.azurewebsites.net/api/docs/poi/index.html)<br>* if everything looks good, comment `/approve` to deploy to production<br><br>Current version in prod: ${{ env.prod-version }}<br><br>Version in staging: ${{ env.staging-version }}'
             })  
-    - name: Azure Logout
-      run: az logout
+        # TODO Check for approve action for above step (line 61) before running below swap action: 
+  swap:
+          runs-on: ubuntu-latest
+          steps:
+            - name: 'Login via Azure CLI'
+              uses: azure/login@v1
+              with:
+                creds: ${{ secrets.AZURE_CREDENTIALS }}
+            - name: Run CLI script
+              uses: azure/CLI@v1
+              with:
+                inlineScript: |
+                   az webapp deployment slot swap  -g openhack7ni2orr9acr -n openhack7ni2orr9poi --slot staging --target-slot production
+            - name: Azure Logout
+              run: az logout
 
