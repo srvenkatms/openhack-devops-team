@@ -60,7 +60,7 @@ jobs:
         $output = ""
        
         $output = '{0} | {1} | {2}' -f($timestamp, $R.StatusCode, $Uri)
-        if($R.SatusCode -ne '200'){
+        if($R.StatusCode -ne '200'){
             exit 1
         
         } else {
