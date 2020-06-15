@@ -111,7 +111,7 @@ jobs:
           # TODO Check for approve action for above step (line 61) before running below swap action: 
 
       - name: 'Login via Azure CLI'
-        uses: azure/login@v1
+        uses: azure/login@v1.1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Run CLI script
