@@ -89,8 +89,8 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: |
-          staging=`az webapp config container show -n openhack7ni2orr9trips --slot staging -g openhack7ni2orr9rg | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-poi | awk '{print $2}'`
-          prod=`az webapp config container show -n openhack7ni2orr9trips -g openhack7ni2orr9rg | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-poi | awk '{print $2}'`
+          staging=`az webapp config container show -n openhack7ni2orr9trips --slot staging -g openhack7ni2orr9rg | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-trips | awk '{print $2}'`
+          prod=`az webapp config container show -n openhack7ni2orr9trips -g openhack7ni2orr9rg | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-trips | awk '{print $2}'`
           echo ::set-env name=staging-version::$staging
           echo ::set-env name=prod-version::$prod
     - name: Create Issue
