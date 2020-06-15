@@ -51,8 +51,8 @@ jobs:
       uses: azure/CLI@v1
       with:
         inlineScript: |
-          staging=`az webapp config container show -n openhack7ni2orr9poi --slot staging -g openhack7ni2orr9acr | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-poi | awk '{print $2}'`
-          prod=`az webapp config container show -n openhack7ni2orr9poi -g openhack7ni2orr9acr | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-poi | awk '{print $2}'`
+          staging=`az webapp config container show -n openhack7ni2orr9poi --slot staging -g openhack7ni2orr9rg | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-poi | awk '{print $2}'`
+          prod=`az webapp config container show -n openhack7ni2orr9poi -g openhack7ni2orr9rg | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-poi | awk '{print $2}'`
           echo ::set-env name=staging-version::$staging
           echo ::set-env name=prod-version::$prod
     - name: Create Issue
@@ -78,7 +78,7 @@ jobs:
               uses: azure/CLI@v1
               with:
                 inlineScript: |
-                   az webapp deployment slot swap  -g openhack7ni2orr9acr -n openhack7ni2orr9poi --slot staging --target-slot production
+                   az webapp deployment slot swap  -g openhack7ni2orr9rg -n openhack7ni2orr9poi --slot staging --target-slot production
             - name: Azure Logout
               run: az logout
 
