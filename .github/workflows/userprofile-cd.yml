@@ -36,4 +36,4 @@ jobs:
       run: docker build apis/userprofile -t openhack7ni2orr9acr.azurecr.io/devopsoh/api-userprofile:${{ github.run_number }}
     # Runs a set of commands using the runners shell
     - name: Push to ACR
-      run: docker push openhack7ni2orr9acr.azurecr.io/devopsoh/api-usrprofile:${{ github.run_number }}
+      run: docker push openhack7ni2orr9acr.azurecr.io/devopsoh/api-userprofile:${{ github.run_number }}
