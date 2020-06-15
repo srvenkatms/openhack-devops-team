@@ -55,7 +55,7 @@ jobs:
     steps:
     - name: Test the Staging Slot
       run: |
-        $R = Invoke-WebRequest -Method Get -URI 'https://openhackggp0ljh0trips-staging.azurewebsites.net/api/healthcheck/trips'
+        $R = Invoke-WebRequest -Method Get -URI 'https://openhack7ni2orr9trips-staging.azurewebsites.net/api/healthcheck/trips'
         $timestamp = Get-Date
         $output = ""
        
