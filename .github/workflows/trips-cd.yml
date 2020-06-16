@@ -89,6 +89,10 @@ jobs:
     needs : [test]
     runs-on: ubuntu-latest
     steps:
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1.1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Get versions in prod / staging
         uses: azure/CLI@v1
         with:
