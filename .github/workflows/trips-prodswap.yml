@@ -2,7 +2,7 @@ on:
   issue_comment:
     types: [created]
     
-name: Deploy POI to Production
+name: Deploy TRIPS to Production
 
 jobs:
   react-on-issue-comment-not-approved:
