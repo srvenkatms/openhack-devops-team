@@ -66,19 +66,6 @@ jobs:
             assignees: [ '${{ github.actor }}' ],
             body: 'Please perform the following:<br><br>* navigate to [the API\'s swagger endpoint](https://openhack7ni2orr9acr-staging.azurewebsites.net/api/docs/poi/index.html)<br>* if everything looks good, comment `/approve` to deploy to production<br><br>Current version in prod: ${{ env.prod-version }}<br><br>Version in staging: ${{ env.staging-version }}'
             })  
-        # TODO Check for approve action for above step (line 61) before running below swap action: 
-  swap:
-          runs-on: ubuntu-latest
-          steps:
-            - name: 'Login via Azure CLI'
-              uses: azure/login@v1
-              with:
-                creds: ${{ secrets.AZURE_CREDENTIALS }}
-            - name: Run CLI script
-              uses: azure/CLI@v1
-              with:
-                inlineScript: |
-                   az webapp deployment slot swap  -g openhack7ni2orr9rg -n openhack7ni2orr9poi --slot staging --target-slot production
-            - name: Azure Logout
-              run: az logout
+    - name: Azure Logout
+      run: az logout
 
