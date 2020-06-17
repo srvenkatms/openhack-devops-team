@@ -31,4 +31,6 @@ jobs:
             repo: context.repo.repo,
             body: 'Please verify deployment was successful before closing. In case of issues type `/approve` again to swap things back.<br><br>Current version in prod: ${{ env.prod-version }}<br><br>Version in staging: ${{ env.staging-version }}'
           })
+    - name: Azure Logout
+    run: az logout
 © 2020 GitHub, Inc.
