@@ -32,4 +32,4 @@ jobs:
             body: 'Please verify deployment was successful before closing. In case of issues type `/Prod-Rollback` again to swap things back.<br><br>Current version in prod: ${{ env.prod-version }}<br><br>Version in staging: ${{ env.staging-version }}'
           })
     - name: Azure Logout
-    run: az logout
+      run: az logout
