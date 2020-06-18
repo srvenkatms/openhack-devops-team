@@ -1,0 +1,35 @@
+on:
+  issue_comment:
+    types: [created]
+    
+name: Deploy TRIPS to Production
+
+jobs:
+  react-on-issue-comment-not-approved:
+    runs-on: ubuntu-latest
+    if: startsWith(github.event.issue.title, 'Approve TRIPS Deploy to Production') && startsWith(github.event.comment.body, '/Prod-Rollback')
+    steps:
+    - name: Azure Login
+      uses: Azure/login@v1.1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Swap the slot
+      run: az webapp deployment slot swap  -g openhack7ni2orr9rg -n openhack7ni2orr9trips --slot production --target-slot staging
+    - name: Get versions in prod / staging
+      run: |
+        staging=`az webapp config container show -n openhack7ni2orr9trips --slot staging -g openhack7ni2orr9rg | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-trips | awk '{print $2}'`
+        prod=`az webapp config container show -n openhack7ni2orr9trips -g openhack7ni2orr9rg | grep openhack7ni2orr9acr.azurecr.io/devopsoh/api-trips | awk '{print $2}'`
+        echo ::set-env name=staging-version::${staging:8:-1}
+        echo ::set-env name=prod-version::${prod:8:-1} 
+    - name: Comment on Issue
+      uses: actions/github-script@0.9.0
+      with:
+        script: |
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: 'Prodcution rollback successful. In case to restore back to production,  `/approve` again to swap things back.<br><br>Current version in prod: ${{ env.prod-version }}<br><br>Version in staging: ${{ env.staging-version }}'
+          })
+    - name: Azure Logout
+    run: az logout
